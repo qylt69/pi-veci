@@ -16,6 +16,16 @@ COUNTRY = 'SK'
 try:
     ssid = input('Enter Wi-Fi SSID: ')
     password = input('Enter Wi-Fi password: ')
+    # Hash the SSID and password and save to files
+    ssid_hash = uhashlib.sha256(ssid.encode()).digest()
+    password_hash = uhashlib.sha256(password.encode()).digest()
+    # Convert to hex manually (MicroPython's sha256 has no hexdigest)
+    ssid_hash_hex = ''.join('{:02x}'.format(b) for b in ssid_hash)
+    password_hash_hex = ''.join('{:02x}'.format(b) for b in password_hash)
+    with open('ssid_hash.txt', 'w') as f:
+        f.write(ssid_hash_hex + '\n')
+    with open('password_hash.txt', 'w') as f:
+        f.write(password_hash_hex + '\n')
 except Exception as e:
     print('Error reading Wi-Fi credentials:', e)
     sys.exit()
